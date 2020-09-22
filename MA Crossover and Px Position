@@ -1,0 +1,84 @@
+//© u2cc
+// @version=4
+
+// Indicator #1 is an indicator labeling the downward and upward price crossover with fast MA 
+// when the overall MAs are in bullish and bearish pattern respectively
+// Indicator #2 is an indicator for MA crosses. 
+// There is also a background feature to indicate bearish, neutral and bullish period
+
+
+////////////////////////////////////////////////////////////
+study("2 Moving Average Cross Signals", shorttitle="MA crosses", overlay = true)
+
+//inputs
+useMAs = input(false, title = "Show Moving Averages?")
+inprice = input(close, title="Price Source For The Moving Averages")
+fast_length = input(20, minval=1, title = "Short period MA")
+slow_length = input(60, minval=1, title = "Long period MA")
+useCurrentRes = input(true, title="Use Current Chart Resolution?")
+resCustom = input(title="Use Different Timeframe? Uncheck Box Above", type=input.resolution, defval="D")
+res = useCurrentRes ? timeframe.period : resCustom
+
+
+// MA calculation
+smoothinput_fast = input(1, minval=1, maxval=4, title='Fast Moving Average Calculation: (1 = SMA), (2 = EMA), (3 = WMA), (4 = Linear)')
+smoothinput_slow = input(1, minval=1, maxval=4, title='Slow Moving Average Calculation: (1 = SMA), (2 = EMA), (3 = WMA), (4 = Linear)')
+fastMA = smoothinput_fast == 1 ? security(syminfo.ticker, res, sma(inprice, fast_length)) :
+ smoothinput_fast == 2 ? security(syminfo.ticker, res, ema(inprice, fast_length)) :
+ smoothinput_fast == 3 ? security(syminfo.ticker, res, wma(inprice, fast_length)) :
+ smoothinput_fast == 4 ? security(syminfo.ticker, res, linreg(inprice, fast_length, 0)) :
+ na
+slowMA = smoothinput_slow == 1 ? security(syminfo.ticker, res, sma(inprice, slow_length)) :
+ smoothinput_slow == 2 ? security(syminfo.ticker, res, ema(inprice, slow_length)) :
+ smoothinput_slow == 3 ? security(syminfo.ticker, res, wma(inprice, slow_length)) :
+ smoothinput_slow == 4 ? security(syminfo.ticker, res, linreg(inprice, slow_length, 0)) :
+ na
+
+
+// set conditions for long and short
+longCondition = crossover(fastMA, slowMA)
+shortCondition = crossunder(fastMA, slowMA)
+
+greenBG() => fastMA>slowMA and close>fastMA
+redBG() => slowMA>fastMA and close<fastMA
+yellowBG() => (slowMA>fastMA and close>fastMA) or (fastMA>slowMA and close < fastMA)
+
+// define trend
+bullish() => fastMA > slowMA 
+bearish() => fastMA < slowMA 
+
+
+ma1 = if useMAs
+    fastMA
+
+ma2 = if useMAs
+    slowMA
+	
+
+alertcondition(longCondition, title='Fast MA crosses above Slow MA (long)', message= 'Bullish MA cross!')
+alertcondition(shortCondition, title='Fast MA crosses below Slow MA (short)', message='Bearish MA cross!')
+
+
+plot(ma1, title = "fast MA", linewidth = 1, editable = true, color=#0062b2, transp=90)
+plot(ma2, title = "slow MA", linewidth = 1, editable = true, color=#ad0135, transp=90)
+
+//background
+bullcolor = #74c185
+bearcolor = #dd6a6a
+ascendingcolor = #DEE12D
+
+bgcolor(greenBG() ? bullcolor : redBG() ? bearcolor : yellowBG() ?  ascendingcolor: na, transp = 90)
+// bull cross
+plotshape(longCondition, style=shape.arrowup, location=location.belowbar , text="MA Cross Up", color=#31E100, transp=0)
+// bear cross
+plotshape(shortCondition, style=shape.arrowdown, location=location.abovebar , text="MA Cross Down", color=#E102DA, transp=0)
+
+//close price position relative to Fast SMA 
+priceStandingDown = crossover(fastMA, close)
+priceStandingUp = crossover(close, fastMA)
+
+
+
+//plot shapes for Price Standing Up and Down
+plotshape(priceStandingUp and bearish(), style=shape.triangleup, location=location.belowbar, text="Px Standing Up", color=#B3E19B, transp=0)
+plotshape(priceStandingDown and bullish(), style=shape.triangledown, location=location.abovebar, text="Px Standing Down", color=#E1CE02, transp=0)
