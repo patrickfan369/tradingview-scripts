@@ -1,0 +1,194 @@
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © seedof
+
+//@version=4
+study("SMA EMA", overlay=true)
+moveBar = input(defval=0,title="Adjust all MA range",type=input.integer)
+x = input(defval=20,title="short MA",type=input.integer)+moveBar
+y = input(defval=60,title="middle MA",type=input.integer)+moveBar
+z = input(defval=120,title="long MA",type=input.integer)+moveBar
+
+
+
+//slope line with arrow
+SwitchArrow=input(defval=true,title="Arrow for Deduction vs Close",type=input.bool)
+SwitchY=SwitchArrow?1:-1
+xArrow = (close>close[x]) ? line.style_arrow_left: line.style_arrow_right
+yArrow = (close>close[y]) ? line.style_arrow_left: line.style_arrow_right
+zArrow = (close>close[z]) ? line.style_arrow_left: line.style_arrow_right
+
+
+slopeS = (SwitchY>0)? line.new(bar_index, close, bar_index[x], close[x], width = 4,color=color.black, style = xArrow) : line.new(bar_index, close, bar_index[x], close[x], width = 4,color=color.black) 
+line.delete(slopeS[1])
+slopeM = (SwitchY>0)? line.new(bar_index, close, bar_index[y], close[y], width = 4,color=color.orange, style = yArrow): line.new(bar_index, close, bar_index[y], close[y], width = 4,color=color.orange)
+line.delete(slopeM[1])
+slopeL = (SwitchY>0)? line.new(bar_index, close, bar_index[z], close[z], width = 4,color=color.blue, style = zArrow): line.new(bar_index, close, bar_index[z], close[z], width = 4,color=color.blue)
+line.delete(slopeL[1])
+
+
+
+
+//price label
+
+l1 = label.new(bar_index-x, na, tostring(x)+'MA '+tostring(close[x],'#.##'), 
+  color=color.black, 
+  size=size.huge,
+  textcolor=color.white,
+  style=close[x] > open[x] ? label.style_labeldown : label.style_labelup, 
+  yloc=close[x] > open[x] ? yloc.abovebar : yloc.belowbar
+  )
+label.delete(l1[1])
+
+l2 = label.new(bar_index-y, na, tostring(y)+'MA '+tostring(close[y],'#.##'), 
+  color=color.orange,
+  size=size.huge,
+  textcolor=color.white,
+   style=close[y] > open[y] ? label.style_labeldown : label.style_labelup, 
+  yloc=close[y] > open[y] ? yloc.abovebar : yloc.belowbar
+  )
+label.delete(l2[1])
+
+l3 = label.new(bar_index-z, na, tostring(z) +'MA '+tostring(close[z],'#.##'), 
+  color=color.blue,
+  size=size.huge,
+  textcolor=color.white,
+  style=close[z] > open[z] ? label.style_labeldown : label.style_labelup, 
+  yloc=close[z] > open[z] ? yloc.abovebar : yloc.belowbar
+  )
+label.delete(l3[1])
+
+
+
+
+//MA line
+
+e1=ema(close,x)
+c1=sma(close,x)
+e2=ema(close,y)
+c2=sma(close,y)
+e3=ema(close,z)
+c3=sma(close,z)
+
+plot(e1,"emaX",color=color.gray)
+plot(c1,"maX",color=color.black, linewidth = 3)
+plot(e2,"emaY",color=#FDBCB4)
+plot(c2,"maY",color=color.red, linewidth = 3)
+plot(e3,"emaZ",color=#ADD8E6)
+plot(c3,"maZ",color=color.blue, linewidth = 3)
+
+
+//color dot for price
+
+cond=barstate.islast
+dot1 = plot(cond?close[x]:na,color=color.black,linewidth=5,offset=-x,style=plot.style_circles,transp=0)
+dot2 = plot(cond?close[y]:na,color=color.red,linewidth=5,offset=-y,style=plot.style_circles,transp=0)
+dot3 = plot(cond?close[z]:na,color=color.blue,linewidth=5,offset=-z,style=plot.style_circles,transp=0)
+
+
+
+//////////////////////
+///                ///
+///  短期趋势转折  ///
+///                ///
+////////////////////// 注：与雷公的显示不同，逻辑为 前一天或者当天,这两天的 EMA拐头 和 SMA拐头，任意一对判断组合互相验证了，就代表短期趋势出现，并以下跌为优先判断
+Switch=input(defval=true,title="MA strategy Barcolor",type=input.bool)
+SwitchX=Switch?1:-1
+
+Switchbg=input(defval=true,title="Trend Background Color",type=input.bool)
+Switchbackg=Switchbg?1:-1
+
+//calculate the multiplier for smoothing (weighting) the EMA, which typically follows the formula: [2 ÷ (number of observations + 1)]. For a 20-day moving average, the multiplier would be [2/(20+1)]= 0.0952.
+//Finally, the following formula is used to calculate the current EMA:EMA = Closing price x multiplier + EMA (previous day) x (1-multiplier)
+//So if EMA(today) > EMA (previous day) then you can consider       EMA(today) = EMA (previous day) * (1+x) and x>0
+//EMA(today) = Closing price * multiplier + EMA (previous day) * (1-multiplier) 
+//EMA (previous day) * (1+x) = Closing price * multiplier + EMA (previous day) * (1-multiplier)
+//EMA (previous day) *(x+multiplier) = Closing price* multiplier
+//if Closing price> EMA (previous day) then Closing price = EMA (previous day) * (1+y) and y>0
+//EMA (previous day) *(x+multiplier) = EMA (previous day) * (1+y)* multiplier
+//x+multiplier = multiplier + y*multiplier
+//x/multiplier (+1) = (1+) y
+//x>0 <==> y>0
+// EMA(today) > EMA (previous day)   <==>  Closing price> EMA (previous day)
+
+smaxUp = close>close[x]
+smayUp = close>close[y]
+smazUp = close>close[z]
+smaxDown = close<close[x]
+smayDown = close<close[y]
+smazDown = close<close[z]
+
+emaxUp = close>ema(close[1],x)
+emayUp = close>ema(close[1],y)
+emazUp = close>ema(close[1],z)
+emaxDown = close<ema(close[1],x)
+emayDown = close<ema(close[1],y)
+emazDown = close<ema(close[1],z)
+
+cs=(close-ema(close,x))/ema(close,x)*100          // divergence use ema
+sm=(ema(close,x)-ema(close,y))/ema(close,y)*100
+ml=(ema(close,y)-ema(close,z))/ema(close,z)*100
+cm=(close-ema(close,y))/ema(close,y)*100
+cl=(close-ema(close,z))/ema(close,z)*100
+sl=(ema(close,x)-ema(close,z))/ema(close,z)*100
+
+
+
+longlinerowsm = ema(close,x)>ema(close,y)         // use ema response faster, sma delay too much
+longlinerowml = ema(close,y)>ema(close,z)
+longlinerowsml = longlinerowsm and longlinerowml
+
+shortlinerowsm = ema(close,x)<ema(close,y)
+shortlinerowml = ema(close,y)<ema(close,z)
+shortlinerowsml = shortlinerowsm and shortlinerowml
+
+
+
+bgcolor((longlinerowml and Switchbackg >0) ? color.aqua : na,transp=75)  
+bgcolor((longlinerowsml and Switchbackg >0) ? color.white : na,transp=55)  // where top will occur
+bgcolor((shortlinerowml and Switchbackg >0) ? color.black : na,transp=75) 
+bgcolor((shortlinerowsml and Switchbackg >0)? color.gray : na,transp=75)  // where bottom will occur 
+
+
+ConBlack = (smaxDown or smaxDown[1]) and (emaxDown or emaxDown[1])     //Black and Aqua is a short term indicator
+ConAqua  = not ConBlack and (smaxUp or smaxUp[1]) and (emaxUp or emaxUp[1])
+
+//ConBlack = smaxDown and (emaxDown or emaxDown[1])
+//ConBlack =  close<close[x] and close[1]<ema(close[1],x)
+//ConBlack =  low<max(high[x],high[x-1]) and close<(ema(low,x))
+//ConBlack =  low<max(high[x],high[x-1]) and (close[1]<ema(close[1],x) or close<ema(close,x))
+//ConBlack =  close<close[x] and (close[1]<ema(close[1],x) or close<ema(close,x))
+//ConAqua  =  close[1]>close[x+1] and close>ema(close,x)
+//ConAqua  =  high>min(low[x-1],low[x]) and close>ema(high,x)
+//ConAqua  =  not ConBlack and (emaxUp[1] or emaxUp) and (smaxUp or smaxUp[1]) 
+//ConAqua  =  not ConBlack and (smaxUp[1] or smaxUp) and emaxUp 
+//ConAqua  =  not ConBlack and (close[1]>close[x+1] or close>close[x]) and high>ema(close,x)
+//ConAqua  =  not ConBlack and (close[1]>close[x+1] or close>close[y]) and high>ema(close,x)
+//ConAqua  =  not ConBlack and ((close[1]>close[x+1] and close<sma(close,y)) or ((close>close[y])and close>sma(close,y))) and high>ema(close,x)
+
+ConGray  =  not (ConAqua or ConBlack)
+
+ChangeColorGray = (ConGray and SwitchX>0) ? color.silver:na
+ChangeColorAqua = (ConAqua and SwitchX>0) ? color.aqua:na
+ChangeColorBlack = (ConBlack and SwitchX>0) ? color.black:na
+barcolor(ChangeColorAqua,editable=false)
+barcolor(ChangeColorBlack,editable=false)
+barcolor(ChangeColorGray,editable=false)
+
+
+// Gap
+SwitchG=input(defval=false,title="Gap",type=input.bool)
+SwitchGap=SwitchG?1:-1
+
+Up1 = (low>high[1] and SwitchGap>0) ?line.new(bar_index,low,bar_index[1],high[1],extend=extend.none,color=color.navy,width=3):na
+Up2 = (low>high[1] and SwitchGap>0) ?line.new(bar_index,high[1],bar_index[1],low,extend=extend.none,color=color.navy,width=3):na
+Down1 = (high<low[1] and SwitchGap>0) ?line.new(bar_index,high,bar_index[1],low[1],extend=extend.none,color=color.navy,width=3):na
+Down2 = (high<low[1] and SwitchGap>0) ?line.new(bar_index,low[1],bar_index[1],high,extend=extend.none,color=color.navy,width=3):na
+
+
+// Credit
+GLlabel=label.new(x=bar_index,y=close,text="均线系统\n\n  "+"感谢LEI & LoneCapital\n\n"+"感谢jchang274" ,
+     style=label.style_label_left,
+     color=color.new(color.yellow,transp=100),
+     textcolor=color.new(color.silver,transp=50),
+     size=size.large)
+label.delete(GLlabel[1])
