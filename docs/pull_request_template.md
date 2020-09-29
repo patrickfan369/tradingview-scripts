@@ -1,6 +1,6 @@
 ## Proposed changes
 
-Describe your changes here to communicate to the maintainers why we should accept this pull request. If it fixes a bug or resolves a featured tradingview script, be sure to link to that theory or video url from lonecapital.
+Describe your changes here to communicate to the maintainers why we should accept this pull request. If the changes fix an existing bug or issue that derived from any tradingview script, be sure to reference that script or the theory from LoneCapital.
 
 ## Types of changes
 
@@ -10,7 +10,7 @@ _Put an `x` in the boxes that apply_
 - [ ] Bugfix (non-breaking change which fixes an issue)
 - [ ] New scripts (non-breaking change which adds functionality)
 - [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
-- [ ] Documentation Update (if none of the other choices apply)
+- [ ] Documentation update (if none of the other choices apply)
 
 ## Checklist
 
@@ -18,7 +18,6 @@ _Put an `x` in the boxes that apply. You can also fill these out after creating 
 
 - [ ] I have tested the scripts with TradingView
 - [ ] I have added necessary documentation (if appropriate)
-- [ ] Any dependent changes have been merged and published in downstream modules
 
 ## Further comments
 
