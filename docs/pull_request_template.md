@@ -8,8 +8,7 @@ What types of changes does your code introduce to BankrollHunter?
 _Put an `x` in the boxes that apply_
 
 - [ ] Bugfix (non-breaking change which fixes an issue)
-- [ ] New scripts (non-breaking change which adds functionality)
-- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
+- [ ] New script (non-breaking change which adds functionality)
 - [ ] Documentation update (if none of the other choices apply)
 
 ## Checklist
