@@ -1,9 +1,9 @@
 //© u2cc
 // @version=4
 
-// Indicator #1 is an indicator labeling the downward and upward price crossover with fast MA 
+// Indicator #1 is an indicator labeling the downward and upward price crossover with fast MA
 // when the overall MAs are in bullish and bearish pattern respectively
-// Indicator #2 is an indicator for MA crosses. 
+// Indicator #2 is an indicator for MA crosses.
 // There is also a background feature to indicate bearish, neutral and bullish period
 
 
@@ -44,8 +44,8 @@ redBG() => slowMA>fastMA and close<fastMA
 yellowBG() => (slowMA>fastMA and close>fastMA) or (fastMA>slowMA and close < fastMA)
 
 // define trend
-bullish() => fastMA > slowMA 
-bearish() => fastMA < slowMA 
+bullish() => fastMA > slowMA
+bearish() => fastMA < slowMA
 
 
 ma1 = if useMAs
@@ -53,7 +53,7 @@ ma1 = if useMAs
 
 ma2 = if useMAs
     slowMA
-	
+
 
 alertcondition(longCondition, title='Fast MA crosses above Slow MA (long)', message= 'Bullish MA cross!')
 alertcondition(shortCondition, title='Fast MA crosses below Slow MA (short)', message='Bearish MA cross!')
@@ -73,7 +73,7 @@ plotshape(longCondition, style=shape.arrowup, location=location.belowbar , text=
 // bear cross
 plotshape(shortCondition, style=shape.arrowdown, location=location.abovebar , text="MA Cross Down", color=#E102DA, transp=0)
 
-//close price position relative to Fast SMA 
+//close price position relative to Fast SMA
 priceStandingDown = crossover(fastMA, close)
 priceStandingUp = crossover(close, fastMA)
 

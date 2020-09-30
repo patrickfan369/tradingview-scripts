@@ -3,12 +3,13 @@ This repo holds the scripts developed for [tradingview](https://www.tradingview.
 
 ## Developers 开发者
 Please fill in your Slack username, Github username, and skill level:
-请填写你的Slack用户名、Github用户名和技术水平:
 - good: expert in at least another coding language and can work with pine script documentation
-- 好：至少是另一种编码语言的专家，并能使用pine script文档
 - average: can modify pine script and make small changes
-- 一般：会修改pine script，并能做小的改动
 - starting: just learning to code
+
+请填写你的Slack用户名、Github用户名和对应的技术水平:
+- 好：至少是另一种编码语言的专家，并能使用pine script文档
+- 一般：会修改pine script，并能做小的改动
 - 起始：刚开始学代码
 
 | Slack Name | Github Name | Skill Level |
@@ -16,17 +17,18 @@ Please fill in your Slack username, Github username, and skill level:
 | @Toby Zhou - 数据攻城狮 | lisangzhou  | good |
 | XXX |    YYY   |   ZZZ |
 
-## 效果
-![Market-Breadth](/Market-Breadth/market-tradingview.png)
+## Development Process 开发流程
+- create a pull request and fill in the description based on the pull request template
+- assign code reviewers, at least two but up to five
+- once the pull request is approved, merge to develop branch
+- create a release to master branch
 
-- [S&P500 Market Breadth from tradingview.com(市场宽度)](/Market-Breadth)
+- 创建一个pull request，并根据模板填写描述
+- 指定人来做代码审查，至少两名，但最多五名
+- 一旦pull request被批准，merge到develop
+- 创建一个release到master
 
-欢迎提交，有任何问题/建议，请点击[这里提交issues](https://github.com/bankrollhunter/tradingview-scripts/issues/new)
+## Create an Issue 提出质疑
+Feel free to submit any questions/suggestions, please click on [issues](https://github.com/bankrollhunter/tradingview-scripts/issues/new).
 
-
-## 双均线交易系统
-来自[lonecapital](https://lonecapital.com/investment/7938/)
-### platform
-- [tradingview](https://github.com/bankrollhunter/lonecapital-chart)
-    1. [双均线 and 抵扣价](https://github.com/bankrollhunter/lonecapital-chart)
-    2. [乖离率](https://github.com/bankrollhunter/lonecapital-chart)
+欢迎提交，有任何问题/建议，请点击[issues](https://github.com/bankrollhunter/tradingview-scripts/issues/new)。
