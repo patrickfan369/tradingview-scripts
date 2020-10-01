@@ -16,6 +16,7 @@ Please fill in your Slack username, Github username, and skill level:
 |----------|:-------------:|------:|
 | @Toby Zhou - 数据攻城狮 | lisangzhou  | good |
 | @Don The Bullish Bear  | donlingliang | starting |
+| @KK-互联网-CS  | kk | good |
 | XXX |    YYY   |   ZZZ |
 
 ## Development Process 开发流程
