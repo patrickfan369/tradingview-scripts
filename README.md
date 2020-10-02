@@ -17,7 +17,8 @@ Please fill in your Slack username, Github username, and skill level:
 | @Toby Zhou - 数据攻城狮 | lisangzhou  | good |
 | @Don The Bullish Bear  | donlingliang | starting |
 | @KK-互联网-CS  | kk | good |
-| XXX |    YYY   |   ZZZ |
+| @20-本科-物流-jchang274 |  jchang274   |    starting |
+| XXX                     |     YYY      | ZZZ |
 
 ## Development Process 开发流程
 - create a pull request and fill in the description based on the pull request template
