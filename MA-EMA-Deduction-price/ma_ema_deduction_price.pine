@@ -1,4 +1,6 @@
 //@version=4
+// 注意！本版本背景色为白色。如果你用黑色背景，请自行调整颜色
+
 study("MA+EMA",overlay=true)
 e1=ema(close,20)
 c1=sma(close,20)
@@ -6,7 +8,6 @@ e2=ema(close,60)
 c2=sma(close,60)
 e3=ema(close,120)
 c3=sma(close,120)
-
 
 plot(e1,"ema20",color=bar_index % 2 == 0 ? color.gray: color.white)
 plot(c1,"ma20",color=#D3D3D3)
@@ -16,12 +17,21 @@ plot(e3,"ema120",color=bar_index % 2 == 0 ? color.blue: color.white)
 plot(c3,"ma120",color=#ADD8E6)
 
 //DKJ
-circle_color=color.fuchsia
 cond=barstate.islast
 moveBar=input(0)
 x20=input(20)+moveBar
 x60=input(60)+moveBar
 x120=input(120)+moveBar
-plot(cond?low[20]:na,color=circle_color,linewidth=5,offset=-x20,style=plot.style_circles,transp=0, show_last=1)
-plot(cond?low[60]:na,color=circle_color,linewidth=5,offset=-x60,style=plot.style_circles,transp=0, show_last=1)
-plot(cond?low[120]:na,color=circle_color,linewidth=5,offset=-x120,style=plot.style_circles,transp=0, show_last=1)
+
+// 如果把小海军蓝點放在收盘价
+circle_color=color.navy
+transp_value=25
+plot(cond?close[20]:na,color=circle_color,linewidth=5,offset=-x20,style=plot.style_circles,transp=transp_value, show_last=1)
+plot(cond?close[60]:na,color=circle_color,linewidth=5,offset=-x60,style=plot.style_circles,transp=transp_value, show_last=1)
+plot(cond?close[120]:na,color=circle_color,linewidth=5,offset=-x120,style=plot.style_circles,transp=transp_value, show_last=1)
+
+// 如果把小黄點放在最低價便於觀看，把//去掉，但把//添加到上面五行
+// circle_color=color.yellow
+// plot(cond?low[20]:na,color=circle_color,linewidth=5,offset=-x20,style=plot.style_circles,transp=0, show_last=1)
+// plot(cond?low[60]:na,color=circle_color,linewidth=5,offset=-x60,style=plot.style_circles,transp=0, show_last=1)
+// plot(cond?low[120]:na,color=circle_color,linewidth=5,offset=-x120,style=plot.style_circles,transp=0, show_last=1)
