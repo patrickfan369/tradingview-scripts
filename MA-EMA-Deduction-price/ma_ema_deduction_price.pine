@@ -35,3 +35,25 @@ plot(cond?close[120]:na,color=circle_color,linewidth=5,offset=-x120,style=plot.s
 // plot(cond?low[20]:na,color=circle_color,linewidth=5,offset=-x20,style=plot.style_circles,transp=0, show_last=1)
 // plot(cond?low[60]:na,color=circle_color,linewidth=5,offset=-x60,style=plot.style_circles,transp=0, show_last=1)
 // plot(cond?low[120]:na,color=circle_color,linewidth=5,offset=-x120,style=plot.style_circles,transp=0, show_last=1)
+
+// 用label代替plot，修复K线回放或者高频实时K线时，连续画抵扣价小圆点的bug
+// 使用时把下面所有行的//去掉，并且把上面从//DKJ开始的行一直到本行删掉
+//cond=barstate.islast
+//if cond
+    //DKJ_20=label.new(bar_index[20], low[20])
+    //label.set_style(DKJ_20,label.style_labelup)
+    //label.set_size(DKJ_20,size.tiny)
+    //label.set_color(DKJ_20,color.yellow)
+    //label.delete(id=DKJ_20[1])
+    
+    //DKJ_60=label.new(bar_index[60], low[60])
+    //label.set_style(DKJ_60,label.style_labelup)
+    //label.set_size(DKJ_60,size.tiny)
+    //label.set_color(DKJ_60,color.yellow)
+    //label.delete(id=DKJ_60[1])
+    
+    //DKJ_120=label.new(bar_index[120], low[120])
+    //label.set_style(DKJ_120,label.style_labelup)
+    //label.set_size(DKJ_120,size.tiny)
+    //label.set_color(DKJ_120,color.yellow)
+    //label.delete(id=DKJ_120[1])
