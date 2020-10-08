@@ -19,6 +19,7 @@ Please fill in your Slack username, Github username, and skill level:
 | @KK-互联网-CS  | kk | good |
 | @20-本科-物流-jchang274 |  jchang274   |    starting |
 | @James  | u2cc  | good  |
+| @Nan Li | Ryan-1990 | good |
 | XXX                     |     YYY      | ZZZ |
 
 
