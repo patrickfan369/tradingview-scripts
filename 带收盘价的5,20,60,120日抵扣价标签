@@ -1,0 +1,41 @@
+//@version=1
+study("带收盘价的5,20,60,120日抵扣价标签",overlay=true)
+if barstate.islast
+    label.new(
+     x=bar_index-5,
+     y=na,
+     yloc=yloc.abovebar,
+     text="5抵扣价\n\n"+tostring(close),
+     textcolor=color.black,
+     color=color.yellow,
+     style=label.style_label_down,size=size.normal)
+if barstate.islast
+    label.new(
+     x=bar_index-20,
+     y=na,
+     yloc=yloc.abovebar,
+     text="20抵扣价\n\n"+tostring(close),
+     textcolor=color.black,
+     color=color.yellow,
+     style=label.style_label_down,size=size.normal)
+    
+if barstate.islast
+    label.new(
+     x=bar_index-60,
+     y=na,
+     yloc=yloc.abovebar,
+     text="60抵扣价\n\n"+tostring(close),
+     textcolor=color.black,
+     color=color.yellow,
+     style=label.style_label_down,size=size.normal)
+if barstate.islast
+    label.new(
+     x=bar_index-120,
+     y=na,
+     yloc=yloc.abovebar,
+     text="120抵扣价\n\n"+tostring(close),
+     textcolor=color.black,
+     color=color.yellow,
+     style=label.style_label_down,size=size.normal)
+     
+      //@version=4
